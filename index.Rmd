@@ -1,0 +1,158 @@
+---
+title: "Exploratory Data Analysis: NU Print"
+author: Tiffany Jeung
+date: March 14, 2019
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, out.width = "100%")
+source('analysis.R')
+```
+
+
+## Introduction
+A familiar situation: under the pressure of an impending deadline, putting the finishing touches on a paper and dashing to the library to print it out before class begins. At the library, it's a toss-up what printing situation awaits: how long your file takes to upload, whether other people are printing, or arriving just in time for paper to run out (looking at you, Norris printers). Most of those factors lie outside students' control, but there is one piece of information that could help to strategize a student's printing experience: 
+
+**What's the best time for an undergraduate student to print?** 
+
+Considering the focus of environmental sustainability at the university and integration of technology in the classroom, I also wondered whether the university is using less paper over time.
+
+## About the Data
+
+This dataset includes printing jobs through NUPrint system from September 2012 through April 2018. In total, the raw datasets consist of 2,378,008 observations and includes 13 variables, including printer name, date, duplex vs simplex, and paper size. This does not include staff printers. The raw data was kindly provided Northwestern University's Information Commons. This does not include department or staff printing.
+
+## Cleaning the Data
+
+As the question is geared toward undergraduates, I first narrowed the breadth of the dataset. The analysis includes print jobs by students and faculty, limiting to printers on the Evanston campus, as undergraduates aren't likely to be printing there. I also excluded observations that were copies instead of print jobs. This left 1,793,658 observations.
+
+## Printing At a Glance
+
+The University goes through a lot of paper. Over the the course of 2012 to 2018, there were 2,378,008 print jobs, with a total of 6,447,623 pages. Though the total number of printing jobs has increased by year, though this doesn't necessarily mean that the number of sheets used has also increased.
+
+```{r, echo = FALSE}
+annual_print_plot
+```
+
+Let's look a bit closer, at the breakdown per quarter. As expected, printing drops a significant amount during summer. Apart from that, winter quarter seems to have more printing jobs, though not by a consistent margin. 
+
+```{r, echo = FALSE}
+all_qtr_printing
+```
+
+
+## What's the Best Time to Print?
+
+The graph below breaks down the quantity of printing jobs by day of the week from 2012-2018. As expected, Saturday and Sunday have fewer print jobs. With students living off campus,  traveling for extracurriculars, etc, the drop matches expectations. Assuming you stick to the work week, the end of the week seems like prime time to print.
+
+```{r, echo = FALSE}
+dow_all_year_totals
+```
+
+Looking by hour, noon appears to be the most common time of day to print. There's a sharp uptick in printing around 7 a.m., which was unexpected, since libraries open at 8am. Different library hours across buildings, campusus, and history makes it difficult to pinpoint a reason. For example, Mudd library was closed for renovation from March 2016 through September 2017, which may have affected student printing behavior. 
+
+**which plot is more helpful?**
+
+
+```{r, echo = FALSE}
+by_hour_plot
+peak_hour_boxplots
+```
+
+Fewer printing jobs happen on the weekend, and may reflect different behavior than the vast majority of weekend printing -- is the general plot by hour the same, when weekends are taken out?
+
+Since 2012 and 2018 have incomplete data, their printing totals are much lower than other years.
+
+```{r, echo = FALSE}
+business_days_hour_plot
+```
+
+From the hour plots, printing takes a sharp uptick in the morning from *[time]* to 10 a.m. Students should avoid 10 - 3 a.m. are peak printing hours. After that, printing jobs quickly decrease in quantity through 8 p.m. There's a slight uptick in the evening hours around 10, which could be explained by students printing assignments right before closing.
+
+```{r, echo = FALSE}
+morning_hour_boxplots
+peak_hour_boxplots
+afternoon_evening_boxplots
+```
+
+Following main library hours, this leaves 8 a.m. (opening) or 8 p.m. as the optimal hours to print. For the morning hour, the beginning of the hour is best, and printing jobs ramp up after 8:30 a.m. For the evening, no particular segment of the hour stands out.
+
+```{r, echo = FALSE}
+eight_am_printing_minutes
+seven_pm_printing_minutes
+```
+
+Let's get down to the minute. Though this may not be clear due to typical class hours mixing with off-work hours, I was curious to see if any trend aligned with the 10 minutes between classes, as Northwestern's classes end at hh:20 or hh:50.
+
+The period between hh:20 - hh:30 does experience a slight uptick, but total print jobs remains comparatively low. So far, hh:20-hh:30 looks like the best time to print.
+
+```{r, echo = FALSE}
+all_year_min
+```
+
+Does this hold for each day of the week?
+
+```{r, echo = FALSE}
+minute_print_by_day
+dow_faceted_minutes
+```
+
+For most days, yes. The trend is less apparent on Thursdays, though it still holds that the tailend of the hour is busiest.
+
+```{r, echo = FALSE}
+thurs_fri_minutes
+```
+
+The best time for an undergraduate to print during the business week is Friday, between 8:00 - 8:30 a.m. or 8:00 - 9:00 p.m. At other hours, anywhere between hh:20-hh:30 is recommended.
+
+## Sustainability 
+Since 2010, NU's libraries have run an annual initiative in April called PaperLESS Month. Apart from promoting book swaps and composting coffee grounds, the library particularly encourages users to reduce paper used while printing. Has it worked?
+
+As discovered above, printing jobs have increased over the years. This doesn't necessarily mean that the University is using more paper though -- we need to take a closer look at the number of pages printed. The maximums are high, but appear to be decreasing. 
+
+```{r, echo = FALSE}
+sum_stat_sheets
+```
+
+
+
+```{r, echo = FALSE}
+mean_sheets_year
+```
+
+But the total pieces of paper used annually is increasing. This indicates that more people are printing, but that they're printing shorter print jobs.
+
+```{r, echo = FALSE}
+total_sheets_count
+```
+
+Most printing jobs (91.7 percent) are not in color.
+
+```{r, echo = FALSE} 
+color_bar_plot
+```
+
+Over time, NU students also seem to be increasing the number of color jobs.
+
+*could make this a ratio*
+```{r, echo = FALSE}
+color_year
+```
+
+# PaperLESS April
+Since 2010, the library has hosted PaperLESS April, an initiative to encourage students to consider their printing behavior and aim to print less. 2019 will mark its ten-year anniversary. Has this had an impact on printing?
+
+```{r, echo = FALSE}
+avg_by_month_april_red
+mar_apr_may
+```
+
+
+## Limitations + Additional Questions
+
+-- Printer errors? (What are the most common issues? Where do they occur?)
+-- More information on color printing. How about ink, or number of pages?
+-- NU print covers maybe 90 percent of the print jobs, but not all. To get a comprehensive look, need the rest of the printers (department and staff printers)
+-- Each print job isn't attributed to a person. would be interesting to see distribution of printing behavior. Some departments have allowances?
+
+
